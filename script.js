@@ -1,7 +1,7 @@
 // script.js
 
 // List of possible words (you can expand this)
-const wordList = ["apple", "grape", "mango", "peach", "berry"];
+const wordList = ["apple", "grape", "mango", "peach", "berry","boobs"];
 let word = wordList[Math.floor(Math.random() * wordList.length)]; // Randomly select a word
 
 let currentRow = 0;
