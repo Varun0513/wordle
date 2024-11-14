@@ -1,99 +1,108 @@
-// script.js
+const board = document.getElementById("board");
+const message = document.getElementById("message");
 
-// List of possible words (you can expand this)
-const wordList = ["apple", "grape", "mango", "peach", "berry","boobs"];
-let word = wordList[Math.floor(Math.random() * wordList.length)]; // Randomly select a word
-
+const words = ["apple", "grape", "mango", "pearl", "brick"];
+const targetWord = words[Math.floor(Math.random() * words.length)];
+let attempts = 6;
 let currentRow = 0;
-let currentGuess = "";
-const maxGuesses = 6;
 
-// Function to generate the game board
-function generateGameBoard() {
-    const board = document.getElementById("game-board");
-    for (let i = 0; i < maxGuesses * 5; i++) {
-        const tile = document.createElement("div");
-        tile.classList.add("tile");
-        board.appendChild(tile);
+function createBoard() {
+  board.innerHTML = "";
+  for (let i = 0; i < attempts; i++) {
+    for (let j = 0; j < 5; j++) {
+      const tile = document.createElement("input");
+      tile.type = "text";
+      tile.maxLength = 1;
+      tile.classList.add("tile");
+      tile.dataset.row = i;
+      tile.dataset.col = j;
+
+      // Handle input and movement
+      tile.addEventListener("input", handleInput);
+      tile.addEventListener("keydown", handleBackspace);
+
+      board.appendChild(tile);
     }
+  }
+
+  focusTile(0, 0); // Start at the first tile
 }
 
-// Function to generate the on-screen keyboard
-function generateKeyboard() {
-    const keyboard = document.getElementById("keyboard");
-    const keys = "abcdefghijklmnopqrstuvwxyz".split("");
-    keys.forEach(key => {
-        const keyButton = document.createElement("div");
-        keyButton.classList.add("key");
-        keyButton.innerText = key;
-        keyButton.addEventListener("click", () => handleKeyPress(key));
-        keyboard.appendChild(keyButton);
-    });
+function handleInput(e) {
+  const tile = e.target;
+  const row = parseInt(tile.dataset.row);
+  const col = parseInt(tile.dataset.col);
+  const value = tile.value.toLowerCase();
+
+  if (value.match(/[a-z]/i)) {
+    tile.value = value;
+    if (col < 4) {
+      focusTile(row, col + 1); // Move to the next tile
+    } else {
+      checkRow(row); // Check the row when it's full
+    }
+  }
 }
 
-// Handle key press events
-function handleKeyPress(key) {
-    if (currentGuess.length < 5) {
-        currentGuess += key;
-        updateBoard();
-    }
+function handleBackspace(e) {
+  const tile = e.target;
+  const row = parseInt(tile.dataset.row);
+  const col = parseInt(tile.dataset.col);
+
+  if (e.key === "Backspace" && !tile.value && col > 0) {
+    focusTile(row, col - 1); // Move back if the tile is empty
+  }
 }
 
-// Function to handle guesses submission
-function submitGuess() {
-    if (currentGuess.length === 5) {
-        checkGuess(currentGuess);
-        currentGuess = "";
-        currentRow++;
-    }
+function focusTile(row, col) {
+  const tiles = document.querySelectorAll(".tile");
+  const nextTile = Array.from(tiles).find(
+    (t) => parseInt(t.dataset.row) === row && parseInt(t.dataset.col) === col
+  );
+  nextTile.focus();
 }
 
-// Update the game board with the current guess
-function updateBoard() {
-    const board = document.querySelectorAll(".tile");
-    const rowStart = currentRow * 5;
-    for (let i = 0; i < currentGuess.length; i++) {
-        board[rowStart + i].innerText = currentGuess[i];
+function checkRow(row) {
+  let guess = "";
+  const tiles = document.querySelectorAll(`.tile[data-row="${row}"]`);
+
+  tiles.forEach((tile) => (guess += tile.value));
+
+  if (guess.length === 5) {
+    for (let i = 0; i < 5; i++) {
+      const tile = tiles[i];
+      const letter = tile.value;
+
+      if (letter === targetWord[i]) {
+        tile.classList.add("green");
+      } else if (targetWord.includes(letter)) {
+        tile.classList.add("yellow");
+      } else {
+        tile.classList.add("gray");
+      }
     }
+
+    if (guess === targetWord) {
+      setMessage("Congratulations! You guessed the word!");
+      disableBoard();
+    } else {
+      currentRow++;
+      if (currentRow === attempts) {
+        setMessage(`Game over! The word was "${targetWord}".`);
+        disableBoard();
+      } else {
+        focusTile(currentRow, 0); // Move to the next row
+      }
+    }
+  }
 }
 
-// Check the current guess against the correct word
-function checkGuess(guess) {
-    const board = document.querySelectorAll(".tile");
-    const rowStart = currentRow * 5;
-
-    for (let i = 0; i < guess.length; i++) {
-        const tile = board[rowStart + i];
-        if (guess[i] === word[i]) {
-            tile.classList.add("correct");
-        } else if (word.includes(guess[i])) {
-            tile.classList.add("close");
-        } else {
-            tile.classList.add("wrong");
-        }
-    }
-
-    // Check if the player won
-    if (guess === word) {
-        showMessage("Congratulations! You guessed the word!");
-    } else if (currentRow === maxGuesses - 1) {
-        showMessage(`Game over! The word was: ${word}`);
-    }
+function setMessage(text) {
+  message.textContent = text;
 }
 
-// Show a message to the player
-function showMessage(message) {
-    const messageDiv = document.getElementById("message");
-    messageDiv.innerText = message;
+function disableBoard() {
+  document.querySelectorAll(".tile").forEach((tile) => (tile.disabled = true));
 }
 
-// Listen for Enter key to submit the guess
-document.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-        submitGuess();
-    }
-});
-
-// Initialize the game
-generateGameBoard();
-generateKeyboard();
+createBoard();
