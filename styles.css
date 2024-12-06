@@ -3,7 +3,7 @@ body {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  padding-top: 80px;
+  padding-top: 30px;
   margin: 0;
   background-color: #121213;
   font-family: 'Arial', sans-serif;
@@ -11,7 +11,9 @@ body {
 }
 
 .container {
-  text-align: center;
+  justify-content: center;
+  position: absolute;
+  display:block;
 }
 
 #board {
@@ -54,6 +56,7 @@ body {
   margin-top: 10px;
   font-size: 18px;
 }
+
 h1{
     color: antiquewhite;
     margin-top: 18px;
@@ -64,6 +67,11 @@ h1{
     display: block;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
     
+}
+.heading{
+  display: flex;
+  position:relative;
+   margin-top: -50%;
 }
 .navbar{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -87,12 +95,10 @@ h1{
     text-decoration: none;
     color:antiquewhite;
     font-size: 18px;
-     
 }
 .navbar ul li a:hover{
     background-color: #575757 ;
     border-radius: 5px;
-
 }
 
  .navbar .left{
@@ -109,15 +115,12 @@ h1{
     /* color: #ffffff; */
 }
 .keyboard {
-  /* display: grid; */
-  display: grid;
+  position: absolute;
+  display: inline;
   margin-right: auto;
-  
   grid-template-columns: repeat(10, 1fr);
   gap: 5px;
-  margin-top: 20px;
-
-
+  margin-top: 580px;
 }
 
 .key {
