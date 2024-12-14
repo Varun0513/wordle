@@ -70,8 +70,13 @@ h1{
 }
 .heading{
   display: flex;
-  position:relative;
-   margin-top: -50%;
+  position:fixed;
+   /* margin-top: -50%; */
+   top: 20px;
+   left: 50%;
+   transform: translateX(-50%);
+   z-index: 100;
+
 }
 .navbar{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
