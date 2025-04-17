@@ -1,7 +1,7 @@
 const board = document.getElementById("board");
 const message = document.getElementById("message");
 
-const words = ["apple"];
+const words = ["apple", "grape", "prank"];
 const targetWord = words[Math.floor(Math.random() * words.length)];
 let attempts = 6;
 let currentRow = 0;
@@ -169,7 +169,6 @@ function flipTile(tile) {
   tile.classList.add("flipped");
 }
 
-
 function focusTile(row, col) {
   const tiles = document.querySelectorAll(".tile");
   tiles.forEach((tile) => tile.classList.remove("active-row")); // Clear active class
@@ -183,7 +182,6 @@ function focusTile(row, col) {
 
   if (nextTile) nextTile.focus();
 }
-
 
 function checkRow(row) {
   const tiles = document.querySelectorAll(`.tile[data-row="${row}"]`);
@@ -229,7 +227,6 @@ function checkRow(row) {
     }
   }
 }
-
 
 function setMessage(text) {
   message.textContent = text;
